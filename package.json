@@ -1,0 +1,10 @@
+{
+	"scripts": {
+		"dev": "bunx servor",
+		"prettier": "bunx biome format --write"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@biomejs/biome": "2.1.3"
+	}
+}

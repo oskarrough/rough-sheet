@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Rough Drawer</title>
+		<link rel="stylesheet" href="rough-drawer.css" />
+	</head>
+	<body>
+		<h1>rough drawer web component</h1>
+		<p>work in progress summer 2025</p>
+		<p>
+			This is a UI "drawer" familiar from mobile interfaces where you drag
+			-> open a panel from one side and it'll smoothly animate and snap
+			into either open or closed state.
+		</p>
+
+		<h4>Tweak the behaviour through HTML attributes</h4>
+		<ul>
+			<li><code>direction</code>: "bottom" | "top" | "left" | "right"</li>
+			<li>
+				<code>snap-threshold</code>: Number (percentage, e.g., "30" =
+				30%)
+			</li>
+			<li>
+				<code>velocity-threshold</code>: Number (px/ms, e.g., "0.6" =
+				0.6 px/ms)
+			</li>
+		</ul>
+
+		<h4>Control it via methods</h4>
+		<ul>
+			<li><code>drawer.open()</code> - Programmatically open</li>
+			<li><code>drawer.close()</code> - Programmatically close</li>
+		</ul>
+
+		<menu
+			style="
+				display: inline-flex;
+				border: 2px solid red;
+				padding: 1rem;
+				background: yellow;
+				position: relative;
+				z-index: 999;
+			"
+		>
+			<button class="open">Open</button>
+			<button class="close">Close</button>
+		</menu>
+
+		<h4>Listen to events</h4>
+		<ul>
+			<li><code>drawer-open</code> - Fired when drawer opens</li>
+			<li><code>drawer-close</code> - Fired when drawer closes</li>
+			<li>
+				<code>drawer-drag</code> - Fired during drag (detail.progress)
+			</li>
+		</ul>
+
+		<rough-drawer id="main-drawer" direction="bottom"> </rough-drawer>
+
+		<script type="module" src="rough-drawer.js"></script>
+
+		<script>
+			const drawer = document.getElementById("main-drawer");
+			drawer.addEventListener("drawer-open", (e) => {
+				console.log("🎉 Drawer opened");
+			});
+			drawer.addEventListener("drawer-close", (e) => {
+				console.log("👋 Drawer closed");
+			});
+			drawer.addEventListener("drawer-drag", (e) => {
+				const { progress } = e.detail;
+				console.log(`📊 Drag progress: ${Math.round(progress * 100)}%`);
+			});
+			document
+				.querySelector("button.open")
+				.addEventListener("click", () => drawer.open());
+			document
+				.querySelector("button.close")
+				.addEventListener("click", () => drawer.close());
+		</script>
+	</body>
+</html>
