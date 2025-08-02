@@ -4,7 +4,7 @@ import {InertiaPlugin} from 'https://cdn.jsdelivr.net/npm/gsap@3.13.0/InertiaPlu
 
 gsap.registerPlugin(Draggable, InertiaPlugin)
 
-class GSAPDrawer extends HTMLElement {
+class RoughDrawer extends HTMLElement {
 	isOpen = false
 	maxDragDistance = 0
 	snapThreshold = 0.25
@@ -14,6 +14,7 @@ class GSAPDrawer extends HTMLElement {
 	dragStartPos = null
 	direction = 'bottom'
 	easing = 'cubic-bezier(0.32, 0.72, 0, 1)'
+	duration = 0.3
 
 	// Direction configuration
 	static DIRECTIONS = {
@@ -54,7 +55,7 @@ class GSAPDrawer extends HTMLElement {
 	connectedCallback() {
 		// Parse direction attribute
 		this.direction = this.getAttribute('direction') || 'bottom'
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		if (!config) {
 			console.error(`Invalid direction: ${this.direction}. Using 'bottom'.`)
 			this.direction = 'bottom'
@@ -110,7 +111,7 @@ class GSAPDrawer extends HTMLElement {
 			this.direction,
 		)
 
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		const bounds = this.getDragBounds()
 
 		this.draggable = Draggable.create(this.drawer, {
@@ -136,7 +137,7 @@ class GSAPDrawer extends HTMLElement {
 	}
 
 	getDragBounds() {
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 
 		if (config.isVertical) {
 			return config.multiplier === 1
@@ -154,13 +155,13 @@ class GSAPDrawer extends HTMLElement {
 	}
 
 	setClosedPosition() {
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		const closedValue = this.maxDragDistance * config.multiplier
 		gsap.set(this.drawer, {[config.property]: closedValue})
 	}
 
 	handleDrag() {
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		const currentPos = gsap.getProperty(this.drawer, config.property)
 		const progress = Math.abs(currentPos) / this.maxDragDistance
 		const opacity = 1 - progress
@@ -174,7 +175,7 @@ class GSAPDrawer extends HTMLElement {
 	}
 
 	handleDragEnd(e) {
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		const currentPos = gsap.getProperty(this.drawer, config.property)
 		const progress = Math.abs(currentPos) / this.maxDragDistance
 		const openProgress = 1 - progress // 0 = closed, 1 = open
@@ -236,41 +237,49 @@ class GSAPDrawer extends HTMLElement {
 	}
 
 	isClosingSwipe(swipeDirection) {
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		return config ? Math.sign(swipeDirection) === config.closingSwipe : false
 	}
 
 	isOpeningSwipe(swipeDirection) {
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		return config ? Math.sign(swipeDirection) === config.openingSwipe : false
 	}
 
 	open() {
 		this.isOpen = true
 		this.setAttribute('open', '')
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		gsap.to(this.drawer, {
 			[config.property]: 0,
-			duration: 0.5,
+			duration: this.duration,
 			ease: this.easing,
 		})
-		gsap.to(this.overlay, {opacity: 1, duration: 0.5, ease: this.easing})
+		gsap.to(this.overlay, {
+			opacity: 1,
+			duration: this.duration,
+			ease: this.easing,
+		})
 		this.dispatchEvent(new CustomEvent('drawer-open'))
 	}
 
 	close() {
 		this.isOpen = false
 		this.removeAttribute('open')
-		const config = GSAPDrawer.DIRECTIONS[this.direction]
+		const config = RoughDrawer.DIRECTIONS[this.direction]
 		const closedValue = this.maxDragDistance * config.multiplier
 		gsap.to(this.drawer, {
 			[config.property]: closedValue,
-			duration: 0.5,
+			duration: this.duration,
 			ease: this.easing,
 		})
-		gsap.to(this.overlay, {opacity: 0, duration: 0.5, ease: this.easing})
+		gsap.to(this.overlay, {
+			opacity: 0,
+			duration: this.duration,
+			ease: this.easing,
+		})
 		this.dispatchEvent(new CustomEvent('drawer-close'))
 	}
 }
 
-customElements.define('rough-drawer', GSAPDrawer)
+customElements.define('rough-drawer', RoughDrawer)
