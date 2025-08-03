@@ -1,0 +1,130 @@
+rough-sheet {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+	z-index: 50;
+
+	--sheet-gap: 1rem;
+}
+
+rough-sheet[open] {
+	pointer-events: auto;
+}
+
+.rough-sheet-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	pointer-events: auto;
+}
+
+.rough-sheet-panel {
+	position: absolute;
+	background: darkorange;
+	pointer-events: auto;
+	touch-action: none;
+}
+
+/* Bottom drawer (default) */
+rough-sheet[direction="bottom"] .rough-sheet-panel,
+rough-sheet:not([direction]) .rough-sheet-panel {
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100vh;
+	border-radius: var(--sheet-gap) var(--sheet-gap) 0 0;
+}
+
+/* Top drawer */
+rough-sheet[direction="top"] .rough-sheet-panel {
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 100vh;
+	border-radius: 0 0 var(--sheet-gap) var(--sheet-gap);
+}
+
+/* Right drawer */
+rough-sheet[direction="right"] .rough-sheet-panel {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 100vw;
+	border-radius: var(--sheet-gap) 0 0 var(--sheet-gap);
+}
+
+/* Left drawer */
+rough-sheet[direction="left"] .rough-sheet-panel {
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 100vw;
+	border-radius: 0 var(--sheet-gap) var(--sheet-gap) 0;
+}
+
+.rough-sheet-handle {
+	position: absolute;
+	background: black;
+	border-radius: 2.5px;
+	cursor: grab;
+}
+
+/* vertical drawers */
+:where(
+		rough-sheet[direction="bottom"],
+		rough-sheet[direction="top"],
+		rough-sheet:not([direction])
+	)
+	.rough-sheet-content {
+	height: calc(100vh - 60px);
+}
+
+/*  horizontal drawers */
+:where(rough-sheet[direction="left"], rough-sheet[direction="right"])
+	.rough-sheet-content {
+	width: calc(100vw - 60px);
+	height: 100vh;
+}
+
+/* Bottom drawer handle */
+rough-sheet[direction="bottom"] .rough-sheet-handle,
+rough-sheet:not([direction]) .rough-sheet-handle {
+	top: var(--sheet-gap);
+	left: 50%;
+	transform: translateX(-50%);
+	width: calc(var(--sheet-gap) * 2);
+	height: 5px;
+}
+
+/* Top drawer handle */
+rough-sheet[direction="top"] .rough-sheet-handle {
+	bottom: var(--sheet-gap);
+	left: 50%;
+	transform: translateX(-50%);
+	width: calc(var(--sheet-gap) * 2);
+	height: 5px;
+}
+
+/* Right drawer handle */
+rough-sheet[direction="right"] .rough-sheet-handle {
+	top: 50%;
+	left: var(--sheet-gap);
+	transform: translateY(-50%);
+	width: 5px;
+	height: calc(var(--sheet-gap) * 2);
+}
+
+/* Left drawer handle */
+rough-sheet[direction="left"] .rough-sheet-handle {
+	top: 50%;
+	right: var(--sheet-gap);
+	transform: translateY(-50%);
+	width: 5px;
+	height: calc(var(--sheet-gap) * 2);
+}

@@ -1,46 +1,63 @@
-# Rough Drawer Component - Improvement Ideas
+# Rough sheet component - improvement ideas
 
-## Architecture & Standards
+## Performance (high impact)
+- [ ] Update transform directly on element instead of CSS variables to prevent style recalculation
+- [ ] Implement momentum-based dragging for natural interaction
+- [ ] Add damping when dragging beyond limits to simulate physical movement
+- [ ] Use Visual Viewport API for keyboard/input management
+
+## Gesture & interaction (high impact)
+- [ ] Implement snapping points system: large (full height) and medium (~50% height) positions
+- [ ] Add grabber element for drag indication and accessibility
+- [ ] Support swipe-to-dismiss gesture (vertical swipe)
+- [ ] Add shouldDrag function that only allows dragging when scrolled to the top
+- [ ] Prevent multi-touch disruption by ignoring touches after initial one
+- [ ] Add 100ms timeout after reaching scroll top to prevent accidental dismissal
+- [ ] Dynamically adjust drawer height/position when keyboard appears
+- [ ] Support tap-to-cycle through snapping points on grabber
+
+## Animation (high impact)
+- [ ] Use natural cubic-bezier curve (0.32, 0.72, 0, 1)
+- [ ] Set 500ms animation duration to mimic native behavior
+- [ ] Implement background scaling and border radius transformation during drag
+
+## Architecture & standards
+- [ ] Support both modal and nonmodal behaviors (modal blocks parent, nonmodal allows interaction)
+- [ ] Consider extending HTMLDialogElement for built-in modal semantics
+- [ ] Add modal HTML attribute to distinguish modal vs nonmodal behavior
+- [ ] Implement snapping-points attribute (large, medium, or custom heights)
+- [ ] Add prefersGrabberVisible attribute for grabber control
 - [ ] Implement Shadow DOM for proper encapsulation and style isolation
 - [ ] Add observedAttributes static getter and attributeChangedCallback lifecycle
 - [ ] Implement proper disconnectedCallback for cleanup
 - [ ] Add type-safe attribute parsing with validation
 
 ## Accessibility & UX
+- [ ] Support browser Back button/gesture for dismissing sheet (prevents disorientation)
+- [ ] Include visible Close/X button (don't rely only on grabber swipe)
+- [ ] Prevent swipe ambiguity with notification/control panels
+- [ ] Use consistent state naming: STATE_SETTLING, STATE_DRAGGING for internal states
 - [ ] Add ARIA attributes (role="dialog", aria-expanded, aria-hidden)
 - [ ] Implement keyboard navigation (Escape to close, Tab trapping)
 - [ ] Add focus management (focus trap when open, restore focus on close)
 - [ ] Support for screen readers with proper announcements
+- [ ] Make grabber accessible for VoiceOver users (resize without seeing)
+- [ ] Position Done/Cancel buttons: Done top-right, Cancel top-left (LTR layouts)
+- [ ] Support action sheet confirmation for unsaved changes on dismiss
 
-## Performance & Modern Features
-- [ ] Add ResizeObserver for responsive behavior (debounced)
-- [ ] Use passive event listeners where appropriate
-- [ ] Implement prefers-reduced-motion media query support
-- [ ] Consider using CSS Container Queries for responsive design
-- [ ] Optimize dragging with RAF (requestAnimationFrame)
-
-## CSS & Theming
-- [ ] Expand CSS custom properties for better theming
-- [ ] Add CSS logical properties for RTL support
-- [ ] Improve backdrop-filter support for modern blur effects
-- [ ] Better responsive breakpoint handling
-
-## Developer Experience
-- [ ] Add TypeScript definitions
-- [ ] Implement better error handling and validation
-- [ ] Add JSDoc comments for better IDE support
-- [ ] Consider adding animation event callbacks
-
-## Native-like Behaviors
+## Native-like behaviors
 - [ ] Implement proper touch-action handling
 - [ ] Add haptic feedback support (where available)
 - [ ] Better gesture recognition (swipe vs pan)
 - [ ] Implement spring physics for more natural animations
 
-## Code Quality
+## Code quality & best practices
+- [ ] Prevent stacking multiple sheets (causes navigation confusion)
+- [ ] Design for short interactions only (not lengthy content review)
+- [ ] Preserve substantial background visibility (key advantage over full overlays)
 - [ ] Extract configuration to a separate module
 - [ ] Implement proper event delegation patterns
 - [ ] Add unit tests for core functionality
 - [ ] Consider using AbortController for event cleanup
 
-Priority: Shadow DOM > Accessibility > Performance > CSS improvements
+Priority: Performance optimizations > Gesture handling > Animation timing > Shadow DOM > Accessibility

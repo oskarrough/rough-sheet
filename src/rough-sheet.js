@@ -4,7 +4,7 @@ import {InertiaPlugin} from 'https://cdn.jsdelivr.net/npm/gsap@3.13.0/InertiaPlu
 
 gsap.registerPlugin(Draggable, InertiaPlugin)
 
-class RoughDrawer extends HTMLElement {
+class RoughSheet extends HTMLElement {
 	isOpen = false
 	maxDragDistance = 0
 	snapThreshold = 0.25
@@ -55,15 +55,15 @@ class RoughDrawer extends HTMLElement {
 	connectedCallback() {
 		// Parse direction attribute
 		this.direction = this.getAttribute('direction') || 'bottom'
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		if (!config) {
 			console.error(`Invalid direction: ${this.direction}. Using 'bottom'.`)
 			this.direction = 'bottom'
 		}
 
 		this.render()
-		this.overlay = this.querySelector('.rough-drawer-overlay')
-		this.drawer = this.querySelector('.rough-drawer-panel')
+		this.overlay = this.querySelector('.rough-sheet-overlay')
+		this.drawer = this.querySelector('.rough-sheet-panel')
 
 		// Calculate max drag distance based on direction
 		const rect = this.drawer.getBoundingClientRect()
@@ -93,10 +93,10 @@ class RoughDrawer extends HTMLElement {
 
 	render() {
 		this.innerHTML = `
-      <div class="rough-drawer-overlay"></div>
-      <div class="rough-drawer-panel">
-        <div class="rough-drawer-handle"></div>
-        <div class="rough-drawer-content">
+      <div class="rough-sheet-overlay"></div>
+      <div class="rough-sheet-panel">
+        <div class="rough-sheet-handle"></div>
+        <div class="rough-sheet-content">
           <slot name="content"></slot>
         </div>
       </div>
@@ -111,7 +111,7 @@ class RoughDrawer extends HTMLElement {
 			this.direction,
 		)
 
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		const bounds = this.getDragBounds()
 
 		this.draggable = Draggable.create(this.drawer, {
@@ -137,7 +137,7 @@ class RoughDrawer extends HTMLElement {
 	}
 
 	getDragBounds() {
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 
 		if (config.isVertical) {
 			return config.multiplier === 1
@@ -155,27 +155,27 @@ class RoughDrawer extends HTMLElement {
 	}
 
 	setClosedPosition() {
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		const closedValue = this.maxDragDistance * config.multiplier
 		gsap.set(this.drawer, {[config.property]: closedValue})
 	}
 
 	handleDrag() {
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		const currentPos = gsap.getProperty(this.drawer, config.property)
 		const progress = Math.abs(currentPos) / this.maxDragDistance
 		const opacity = 1 - progress
 		gsap.set(this.overlay, {opacity})
 		console.log('handleDrag', progress, config.property, currentPos)
 		this.dispatchEvent(
-			new CustomEvent('drawer-drag', {
+			new CustomEvent('sheet-drag', {
 				detail: {progress, [config.property]: currentPos},
 			}),
 		)
 	}
 
 	handleDragEnd(e) {
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		const currentPos = gsap.getProperty(this.drawer, config.property)
 		const progress = Math.abs(currentPos) / this.maxDragDistance
 		const openProgress = 1 - progress // 0 = closed, 1 = open
@@ -237,19 +237,19 @@ class RoughDrawer extends HTMLElement {
 	}
 
 	isClosingSwipe(swipeDirection) {
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		return config ? Math.sign(swipeDirection) === config.closingSwipe : false
 	}
 
 	isOpeningSwipe(swipeDirection) {
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		return config ? Math.sign(swipeDirection) === config.openingSwipe : false
 	}
 
 	open() {
 		this.isOpen = true
 		this.setAttribute('open', '')
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		gsap.to(this.drawer, {
 			[config.property]: 0,
 			duration: this.duration,
@@ -260,13 +260,13 @@ class RoughDrawer extends HTMLElement {
 			duration: this.duration,
 			ease: this.easing,
 		})
-		this.dispatchEvent(new CustomEvent('drawer-open'))
+		this.dispatchEvent(new CustomEvent('sheet-open'))
 	}
 
 	close() {
 		this.isOpen = false
 		this.removeAttribute('open')
-		const config = RoughDrawer.DIRECTIONS[this.direction]
+		const config = RoughSheet.DIRECTIONS[this.direction]
 		const closedValue = this.maxDragDistance * config.multiplier
 		gsap.to(this.drawer, {
 			[config.property]: closedValue,
@@ -278,8 +278,8 @@ class RoughDrawer extends HTMLElement {
 			duration: this.duration,
 			ease: this.easing,
 		})
-		this.dispatchEvent(new CustomEvent('drawer-close'))
+		this.dispatchEvent(new CustomEvent('sheet-close'))
 	}
 }
 
-customElements.define('rough-drawer', RoughDrawer)
+customElements.define('rough-sheet', RoughSheet)

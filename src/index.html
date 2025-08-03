@@ -3,14 +3,14 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Rough Drawer</title>
-		<link rel="stylesheet" href="rough-drawer.css" />
+		<title>Rough Sheet</title>
+		<link rel="stylesheet" href="rough-sheet.css" />
 	</head>
 	<body>
-		<h1>rough drawer web component</h1>
+		<h1>rough sheet web component</h1>
 		<p>work in progress summer 2025</p>
 		<p>
-			This is a UI "drawer" familiar from mobile interfaces where you drag
+			This is a UI "sheet" familiar from mobile interfaces where you drag
 			-> open a panel from one side and it'll smoothly animate and snap
 			into either open or closed state.
 		</p>
@@ -30,8 +30,8 @@
 
 		<h4>Control it via methods</h4>
 		<ul>
-			<li><code>drawer.open()</code> - Programmatically open</li>
-			<li><code>drawer.close()</code> - Programmatically close</li>
+			<li><code>sheet.open()</code> - Programmatically open</li>
+			<li><code>sheet.close()</code> - Programmatically close</li>
 		</ul>
 
 		<menu
@@ -50,35 +50,35 @@
 
 		<h4>Listen to events</h4>
 		<ul>
-			<li><code>drawer-open</code> - Fired when drawer opens</li>
-			<li><code>drawer-close</code> - Fired when drawer closes</li>
+			<li><code>sheet-open</code> - Fired when sheet opens</li>
+			<li><code>sheet-close</code> - Fired when sheet closes</li>
 			<li>
-				<code>drawer-drag</code> - Fired during drag (detail.progress)
+				<code>sheet-drag</code> - Fired during drag (detail.progress)
 			</li>
 		</ul>
 
-		<rough-drawer id="main-drawer" direction="bottom"> </rough-drawer>
+		<rough-sheet id="main-sheet" direction="bottom"> </rough-sheet>
 
-		<script type="module" src="rough-drawer.js"></script>
+		<script type="module" src="rough-sheet.js"></script>
 
 		<script>
-			const drawer = document.getElementById("main-drawer");
-			drawer.addEventListener("drawer-open", (e) => {
-				console.log("🎉 Drawer opened");
+			const sheet = document.getElementById("main-sheet");
+			sheet.addEventListener("sheet-open", (e) => {
+				console.log("🎉 Sheet opened");
 			});
-			drawer.addEventListener("drawer-close", (e) => {
-				console.log("👋 Drawer closed");
+			sheet.addEventListener("sheet-close", (e) => {
+				console.log("👋 Sheet closed");
 			});
-			drawer.addEventListener("drawer-drag", (e) => {
+			sheet.addEventListener("sheet-drag", (e) => {
 				const { progress } = e.detail;
 				console.log(`📊 Drag progress: ${Math.round(progress * 100)}%`);
 			});
 			document
 				.querySelector("button.open")
-				.addEventListener("click", () => drawer.open());
+				.addEventListener("click", () => sheet.open());
 			document
 				.querySelector("button.close")
-				.addEventListener("click", () => drawer.close());
+				.addEventListener("click", () => sheet.close());
 		</script>
 	</body>
 </html>
