@@ -1,7 +1,9 @@
 {
 	"scripts": {
 		"dev": "bunx servor",
-		"prettier": "bunx biome format --write"
+		"lint": "bunx biome lint",
+		"format": "bunx biome format --write",
+		"deploy": "bunx wrangler deploy"
 	},
 	"dependencies": {},
 	"devDependencies": {
